@@ -14,10 +14,10 @@ type ServeServer struct {
 	listen net.Listener
 }
 
-func NewGRPCServer(cfg *config.Config, server pb.OrderServiceServer) (*ServeServer, error) {
+func NewGRPCServer(cfg *config.Config, server pb.UserServiceServer) (*ServeServer, error) {
 
 	grpcServer := grpc.NewServer()
-	pb.RegisterOrderServiceServer(grpcServer, server)
+	pb.RegisterUserServiceServer(grpcServer, server)
 	listen, err := net.Listen("tcp", cfg.USER_SVC_PORT)
 	if err != nil {
 		return nil, err

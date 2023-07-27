@@ -10,30 +10,25 @@ import (
 	"github.com/Noush-012/project-ecommerce-microservice/user-service/pkg/repository"
 	"github.com/Noush-012/project-ecommerce-microservice/user-service/pkg/service"
 	"github.com/Noush-012/project-ecommerce-microservice/user-service/pkg/usecase"
+	"github.com/google/wire"
 )
 
 func InitiateAPI(cfg *config.Config) (*api.ServeServer, error) {
-	// wire.Build(
+	wire.Build(
 
-	// 	db.ConnToDB,
-	// 	// Repository
-	// 	repository.NewUserRepository,
-	// 	// Client
-	// 	client.NewOrderClient,
+		db.ConnToDB,
+		// Repository
+		repository.NewUserRepository,
+		// Client
+		client.NewOrderClient,
 
-	// 	// Usecase
-	// 	usecase.NewUserUseCase,
+		// Usecase
+		usecase.NewUserUseCase,
 
-	// 	// Service
-	// 	service.NewUserServiceServer,
+		// Service
+		service.NewUserServiceServer,
 
-	// 	api.NewGRPCServer,
-	// )
-	db, _ := db.ConnToDB(cfg)
-	usrpo := repository.NewUserRepository(db)
-	orclnt, _ := client.NewOrderClient(cfg)
-	us := usecase.NewUserUseCase(usrpo, orclnt)
-	pb := service.NewUserServiceServer(us)
-	api.NewGRPCServer(cfg, orclnt)
+		api.NewGRPCServer,
+	)
 	return &api.ServeServer{}, nil
 }
