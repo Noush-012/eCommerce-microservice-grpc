@@ -1,0 +1,472 @@
+syntax = "proto3";
+
+package pb;
+option go_package = "./pkg/pb";
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "pkg/proto/order.proto"; 
+
+service UserService {
+  rpc Profile (UserId) returns (ProfileResponse);
+  rpc AddAddress (Address) returns (AddAddressResponse);
+  rpc UpdateAddress (AddressPatchRequest) returns (google.protobuf.Empty);
+  rpc DeleteAddress (DeleteAddressRequest) returns (google.protobuf.Empty);
+  rpc GetAllAddress (UserId) returns (AddressList);
+  rpc SaveCartItem (SaveCartItemRequest) returns (google.protobuf.Empty);
+  rpc GetCartItemsByCartId (GetCartItemsByCartIdRequest) returns (GetCartItemsByCartIdResponseList);
+  rpc UpdateCart (UpdateCartRequest) returns (google.protobuf.Empty);
+  rpc RemoveCartItem (RemoveCartItemRequest) returns (google.protobuf.Empty);
+  rpc AddToWishlist (AddToWishlistRequest) returns (google.protobuf.Empty);
+  rpc GetWishlist (UserId) returns (Wishlist);
+  rpc DeleteFromWishlist (DeleteFromWishlistRequest) returns (google.protobuf.Empty);
+  rpc GetWalletHistory (UserId) returns (WalletHistory);
+}
+
+message UserId {
+  uint32 userId = 1;
+}
+
+message AddressId {
+  uint32 addressId = 1;
+}
+
+message ProductId {
+  uint32 productId = 1;
+}
+
+// message Pagination {
+//   uint32 Count = 1;
+//   uint32 PageNumber = 2;
+// }
+
+message ProfileResponse {
+  uint32 ID = 1;
+  string UserName = 2;
+  string FirstName = 3;
+  string LastName = 4;
+  uint32 Age = 5;
+  string Email = 6;
+  string Phone = 7;
+  Address DefaultAddress = 8;
+  repeated pb.OrderHistory OrderHistoryList = 9;
+}
+
+message Address {
+  uint32 ID = 1;
+  uint32 UserID = 2;
+  string House = 4;
+  string AddressLine1 = 5;
+  string AddressLine2 = 6;
+  string City = 7;
+  string State = 8;
+  string ZipCode = 9;
+  string Country = 10;
+}
+
+message AddressPatchRequest {
+  uint32 ID = 1;
+  uint32 UserID = 2;
+  string House = 4;
+  string AddressLine1 = 5;
+  string AddressLine2 = 6;
+  string City = 7;
+  string State = 8;
+  string ZipCode = 9;
+  string Country = 10;
+  bool IsDefault = 11;
+  google.protobuf.Timestamp UpdatedAt = 12;
+}
+
+message SaveCartItemRequest {
+  uint32 UserID = 1;
+  uint32 ProductItemID = 2;
+  uint32 Quantity = 3;
+  float Price = 4; 
+  uint32 DiscountPrice = 5;
+}
+
+message GetCartItemsByCartIdRequest {
+  Pagination page = 1;
+  uint32 userId = 2;
+}
+
+message GetCartItemsByCartIdResponse {
+  uint32 ProductItemID = 1;
+  string Name = 2;
+  uint32 Price = 3;
+  uint32 DiscountPrice = 4;
+  uint32 Quantity = 5;
+  uint32 QtyLeft = 6;
+  bool StockStatus = 7;
+  uint32 SubTotal = 8;
+}
+
+message UpdateCartRequest {
+  uint32 UserID = 1;
+  uint32 ProductItemID = 2;
+  uint32 Quantity = 3;
+}
+
+message RemoveCartItemRequest {
+  uint32 UserID = 1;
+  uint32 ProductItemID = 2;
+}
+
+message AddToWishlistRequest {
+  uint32 UserID = 1;
+  uint32 ProductItemID = 2;
+  uint32 Quantity = 3;
+}
+
+message Wishlist {
+  uint32 ProductItemID = 1;
+  string ProductName = 2;
+  string Color = 3;
+  string Storage = 4;
+  uint32 Price = 5;
+  uint32 Quantity = 6;
+  string Image = 7;
+}
+
+message Wallet {
+  uint32 ID = 1;
+  uint32 UserID = 2;
+  float Balance = 3; 
+  string Remark = 4;
+  google.protobuf.Timestamp UpdatedAt = 5;
+  google.protobuf.Timestamp CreatedAt = 6;
+}
+
+message DeleteAddressRequest {
+  uint32 UserID = 1;
+  uint32 AddressID = 2;
+}
+
+message AddressList {
+  repeated Address addresses = 1;
+}
+
+message GetCartItemsByCartIdResponseList {
+  repeated GetCartItemsByCartIdResponse cart_items = 1;
+}
+
+message WalletHistory {
+  repeated Wallet wallets = 1;
+}
+
+// Add a custom response message for AddAddress RPC method
+message AddAddressResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message DeleteFromWishlistRequest {
+  uint32 userId  = 1;
+  int32 productId  = 2;
+}
+
+// syntax = "proto3";
+
+// package pb;
+// option go_package = "./pkg/pb";
+
+// import "google/protobuf/empty.proto";
+
+// service UserService {
+//  rpc Profile (UserId) returns (ProfileResponse);
+//  rpc Addaddress (Address) returns (error);
+//  rpc UpdateAddress (AddressPatchRequest) returns (error);
+//  rpc DeleteAddress (UserId,AddressId) returns (error);
+//  rpc GetAllAddress (UserId) returns ([]Address);
+//  rpc SaveCartItem (SaveCartItemRequest) returns ();
+//  rpc GetCartItemsbyCartId (Pagination,UserId) returns ([]GetCartItemsbyCartIdResponse);  
+//  rpc UpdateCart (UpdateCartRequest) returns ();  
+//  rpc RemoveCartItem  (DeleteCartResponse) returns ();  
+//  rpc AddToWishlist(AddtoWishListRequest) returns ();  
+//  rpc GetWishlist (UserId) returns ([]WishList);  
+//  rpc DeleteFromWishlist (productId,UserId) returns ();  
+//  rpc GetWalletHistory (UserId) returns ();    
+// }
+
+// message UserId {
+//   uint32 userId = 1;
+// }
+
+// message AddressId {
+//   uint32 addressId = 1;
+// }
+// message ProductId {
+//   uint32 productId = 1;
+// }
+// message Pagination {
+//     Count      uint32 = 1;
+//     PageNumber uint32 = 2;
+// }
+// message ProfileResponse {
+//   uint32 ID = 1;
+//   string UserName = 2;
+//   string FirstName = 3;
+//   string LastName = 4;
+//   uint32 Age = 5;
+//   string Email = 6;
+//   string Phone = 7;
+//   Address DefaultAddress = 8;
+//   repeated OrderHistory OrderHistoryList = 9;
+// }
+
+// message Address {
+//   uint32 ID = 1;
+//   uint32 UserID = 2;
+//   string House = 4;
+//   string AddressLine1 = 5;
+//   string AddressLine2 = 6;
+//   string City = 7;
+//   string State = 8;
+//   string ZipCode = 9;
+//   string Country = 10;
+// }
+// message AddressPatchRequest {
+//   uint32 ID = 1;
+//   uint32 UserID = 2;
+//   string House = 4;
+//   string AddressLine1 = 5;
+//   string AddressLine2 = 6;
+//   string City = 7;
+//   string State = 8;
+//   string ZipCode = 9;
+//   string Country = 10;
+//   bool IsDefault = 11;
+//   google.protobuf.Timestamp UpdatedAt = 12;
+// }
+
+// message OrderHistory {
+//   uint32 ID = 1;
+//   google.protobuf.Timestamp OrderDate = 2;
+//   string OrderStatus = 3;
+//   string DeliveryStatus = 4;
+//   float OrderTotal = 5;
+//   string PaymentMethod = 6;
+//   string PaymentStatus = 7;
+// }
+
+// message SaveCartItemRequest {
+//   UserID         uint32   = 1;
+// ProductItemID  uint32   = 2;
+// Quantity       uint32   = 3;
+// Price          float64 = 4;
+// Discount_price uint32   = 5;
+
+// }
+
+// message GetCartItemsbyCartIdRequest {
+
+// }
+// message GetCartItemsbyCartIdResponse {
+//   ProductItemID uint32   = 1;
+//   Name          string = 2;
+//   Price         uint32   = 3;
+//   DiscountPrice uint32   = 4;
+//   Quantity      uint32   = 5;
+//   QtyLeft       uint32   = 6;
+//   StockStatus   bool   = 7;
+//   SubTotal      uint32   = 8;
+// }
+// message UpdateCartRequest {
+//   UserID        uint32 = 1;
+// ProductItemID uint32 = 2;
+// Quantity      uint32 = 3;
+
+// }
+// message DeleteCartResponse {
+//   UserID        uint32 = 1;
+//   ProductItemID uint= 2;
+// }
+
+// message AddtoWishListRequest {
+//   UserID        uint32  = 1;
+//   ProductItemID uint32 = 2;
+//   Quantity      uint32 = 3;
+// }
+// message WishList {
+//   ProductItemId uint32    = 1;
+//   ProductName   string = 2;
+//   Color         string = 3;
+//   Storage       string = 4;
+//   Price         uint32   = 5;
+//   Quantity      uint32   = 6;
+//   Image         string = 7;
+// }
+// message Wallet {
+//   ID        uint32     = 1;
+// UserID    uint32     = 2;
+// Balance   float64  = 3;
+// Remark    string = 4;
+// UpdatedAt time.Time = 5;
+// CreatedAt time.Time = 6;
+// }
+// syntax = "proto3";
+
+// package pb;
+// option go_package = "./pkg/pb";
+
+// import "google/protobuf/empty.proto";
+// import "google/protobuf/timestamp.proto";
+
+// service UserService {
+//   rpc Profile (UserId) returns (ProfileResponse);
+//   rpc AddAddress (Address) returns google.protobuf.Empty;
+//   rpc UpdateAddress (AddressPatchRequest) returns google.protobuf.Empty;
+//   rpc DeleteAddress (DeleteAddressRequest) returns google.protobuf.Empty;
+//   rpc GetAllAddress (UserId) returns AddressList;
+//   rpc SaveCartItem (SaveCartItemRequest) returns google.protobuf.Empty;
+//   rpc GetCartItemsByCartId (GetCartItemsByCartIdRequest) returns GetCartItemsByCartIdResponseList;
+//   rpc UpdateCart (UpdateCartRequest) returns google.protobuf.Empty;
+//   rpc RemoveCartItem (RemoveCartItemRequest) returns google.protobuf.Empty;
+//   rpc AddToWishlist (AddToWishlistRequest) returns google.protobuf.Empty;
+//   rpc GetWishlist (UserId) returns Wishlist;
+//   rpc DeleteFromWishlist (DeleteFromWishlistRequest) returns google.protobuf.Empty;
+//   rpc GetWalletHistory (UserId) returns WalletHistory;
+// }
+
+// message UserId {
+//   uint32 userId = 1;
+// }
+
+// message AddressId {
+//   uint32 addressId = 1;
+// }
+
+// message ProductId {
+//   uint32 productId = 1;
+// }
+
+// message Pagination {
+//   uint32 count = 1;
+//   uint32 pageNumber = 2;
+// }
+
+// message ProfileResponse {
+//   uint32 ID = 1;
+//   string UserName = 2;
+//   string FirstName = 3;
+//   string LastName = 4;
+//   uint32 Age = 5;
+//   string Email = 6;
+//   string Phone = 7;
+//   Address DefaultAddress = 8;
+//   repeated OrderHistory OrderHistoryList = 9;
+// }
+
+// message Address {
+//   uint32 ID = 1;
+//   uint32 UserID = 2;
+//   string House = 4;
+//   string AddressLine1 = 5;
+//   string AddressLine2 = 6;
+//   string City = 7;
+//   string State = 8;
+//   string ZipCode = 9;
+//   string Country = 10;
+// }
+
+// message AddressPatchRequest {
+//   uint32 ID = 1;
+//   uint32 UserID = 2;
+//   string House = 4;
+//   string AddressLine1 = 5;
+//   string AddressLine2 = 6;
+//   string City = 7;
+//   string State = 8;
+//   string ZipCode = 9;
+//   string Country = 10;
+//   bool IsDefault = 11;
+//   google.protobuf.Timestamp UpdatedAt = 12;
+// }
+
+// message OrderHistory {
+//   uint32 ID = 1;
+//   google.protobuf.Timestamp OrderDate = 2;
+//   string OrderStatus = 3;
+//   string DeliveryStatus = 4;
+//   float OrderTotal = 5;
+//   string PaymentMethod = 6;
+//   string PaymentStatus = 7;
+// }
+
+// message SaveCartItemRequest {
+//   uint32 UserID = 1;
+//   uint32 ProductItemID = 2;
+//   uint32 Quantity = 3;
+//   float64 Price = 4;
+//   uint32 DiscountPrice = 5;
+// }
+
+// message GetCartItemsByCartIdRequest {
+//   // Add any specific fields if needed.
+// }
+
+// message GetCartItemsByCartIdResponse {
+//   uint32 ProductItemID = 1;
+//   string Name = 2;
+//   uint32 Price = 3;
+//   uint32 DiscountPrice = 4;
+//   uint32 Quantity = 5;
+//   uint32 QtyLeft = 6;
+//   bool StockStatus = 7;
+//   uint32 SubTotal = 8;
+// }
+
+// message UpdateCartRequest {
+//   uint32 UserID = 1;
+//   uint32 ProductItemID = 2;
+//   uint32 Quantity = 3;
+// }
+
+// message RemoveCartItemRequest {
+//   uint32 UserID = 1;
+//   uint32 ProductItemID = 2;
+// }
+
+// message AddToWishlistRequest {
+//   uint32 UserID = 1;
+//   uint32 ProductItemID = 2;
+//   uint32 Quantity = 3;
+// }
+
+// message Wishlist {
+//   uint32 ProductItemID = 1;
+//   string ProductName = 2;
+//   string Color = 3;
+//   string Storage = 4;
+//   uint32 Price = 5;
+//   uint32 Quantity = 6;
+//   string Image = 7;
+// }
+
+// message Wallet {
+//   uint32 ID = 1;
+//   uint32 UserID = 2;
+//   float64 Balance = 3;
+//   string Remark = 4;
+//   google.protobuf.Timestamp UpdatedAt = 5;
+//   google.protobuf.Timestamp CreatedAt = 6;
+// }
+
+// message DeleteAddressRequest {
+//   uint32 UserID = 1;
+//   uint32 AddressID = 2;
+// }
+
+// message AddressList {
+//   repeated Address addresses = 1;
+// }
+
+// message GetCartItemsByCartIdResponseList {
+//   repeated GetCartItemsByCartIdResponse cart_items = 1;
+// }
+
+// message WalletHistory {
+//   repeated Wallet Wallet = 1 ;
+// }
+

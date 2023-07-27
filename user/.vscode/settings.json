@@ -1,0 +1,14 @@
+// {
+//     "protoc": {
+//         "path": "/snap/bin/protoc", // Path to the protoc executable
+//         "compile_on_save": false,
+//         "options": [
+//             "--proto_path=protos/v3",
+//             "--proto_path=protos/v2",
+//             "--proto_path=${workspaceRoot}/proto",
+//             "--proto_path=${env.GOPATH}/src",
+//             "--go_out=plugins=grpc:${workspaceRoot}/tmp", // Modify your-output-directory to the desired output directory for Go files
+//             "--java_out=gen/java"
+//         ]
+//     }
+// }
