@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package pb;
+option go_package = "./pkg/pb";
+
+
+import "google/protobuf/timestamp.proto";
+
+service OrderService {
+    rpc GetOrderHistory (GetOrderHistoryRequest) returns (GetOrderHistoryResponse);
+}
+
+message GetOrderHistoryRequest {
+    Pagination pagination = 1;
+    uint32 userId = 2;
+}
+
+message Pagination {
+    uint32 Count = 1;
+    uint32 PageNumber = 2;
+}
+
+message GetOrderHistoryResponse {
+    repeated OrderHistory OrderHistoryList = 1;
+}
+
+message OrderHistory {
+    uint32 ID = 1;
+    google.protobuf.Timestamp OrderDate = 2;
+    string OrderStatus = 3;
+    string DeliveryStatus = 4;
+    float OrderTotal = 5;
+    string PaymentMethod = 6;
+    string PaymentStatus = 7;
+}

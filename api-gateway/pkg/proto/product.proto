@@ -1,0 +1,187 @@
+syntax = "proto3";
+
+package pb;
+option go_package = "./pkg/pb";
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+
+
+service ProductService {
+    rpc AddProduct (ProductReq) returns (google.protobuf.Empty);
+    rpc AddCategory (CategoryReq) returns (google.protobuf.Empty);
+    rpc GetAllBrands (google.protobuf.Empty) returns (GetAllBrandsResponse);
+    rpc GetProducts (PaginationRequest) returns (GetProductResponse);
+    rpc UpdateProduct (UpdateProductReq) returns (google.protobuf.Empty);
+    rpc DeleteProduct (DeleteProductReq) returns (Product);
+    rpc AddProductItem (ProductItemReq) returns (google.protobuf.Empty);
+    rpc GetProductItem (ProductID) returns (GetProductItemResponse);
+    rpc SKUhelper (ProductID) returns (google.protobuf.Empty);
+}
+
+
+message PaginationRequest {
+    uint32 Count = 1;
+    uint32 PageNumber = 2;
+}
+
+message ProductID {
+    uint32 ProductID = 1;
+}
+
+message GetProductItemResponse {
+    repeated ProductItemResp ProductItems = 1;
+}
+
+message Category {
+    uint32 ID = 1;
+    uint32 ParentID = 2;
+    Category Parent = 3;
+    string CategoryName = 4;
+    repeated Product Products = 5;
+    repeated Category Children = 6;
+}
+
+message Product {
+    uint32 ID = 1;
+    string Name = 2;
+    string Description = 3;
+    uint32 CategoryID = 4;
+    Category Category = 5;
+    uint32 Price = 6;
+    uint32 DiscountPrice = 7;
+    string Image = 8;
+    google.protobuf.Timestamp CreatedAt = 9;
+    google.protobuf.Timestamp UpdatedAt = 10;
+    repeated ProductItem Items = 11;
+}
+
+message ProductItem {
+    uint32 ID = 1;
+    uint32 ProductID = 2;
+    uint32 QtyInStock = 3;
+    bool StockStatus = 4;
+    uint32 Price = 5;
+    string SKU = 6;
+    uint32 DiscountPrice = 7;
+    google.protobuf.Timestamp CreatedAt = 8;
+    google.protobuf.Timestamp UpdatedAt = 9;
+    repeated ProductConfig Configurations = 10;
+    repeated ProductImage Images = 11;
+}
+
+message Variation {
+    uint32 ID = 1;
+    uint32 CategoryID = 2;
+    Category Category = 3;
+    string VariationName = 4;
+    repeated VariationOption Options = 5;
+}
+
+message VariationOption {
+    uint32 VariationOptionID = 1;
+}
+
+message ProductConfig {
+    uint32 ID = 1;
+    uint32 ProductItemID = 2;
+    uint32 VariationOptionID = 3;
+    ProductItem ProductItem = 4;
+    VariationOption VariationOption = 5;
+}
+
+message ProductImage {
+    uint32 ID = 1;
+    uint32 ProductItemID = 2;
+    ProductItem ProductItem = 3;
+    string Image = 4;
+}
+
+message ProductReq {
+    string Name = 1;
+    string Description = 2;
+    uint32 CategoryID = 3;
+    uint32 Price = 4;
+    string Image = 5;
+}
+
+message UpdateProductReq {
+    uint32 ID = 1;
+    string Name = 2;
+    string Description = 3;
+    uint32 CategoryID = 4;
+    uint32 Price = 5;
+    string Image = 6;
+}
+
+message UpdateProductItemReq {
+    uint32 ID = 1;
+    uint32 ProductId = 2;
+    uint32 QtyInStock = 3;
+    string SKU = 4;
+    string DiscountPrice = 5;
+    uint32 Price = 6;
+    string Image = 7;
+}
+
+message DeleteProductReq {
+    uint32 ID = 1;
+}
+
+message CategoryReq {
+    uint32 ID = 1;
+    uint32 ParentID = 2;
+    string CategoryName = 3;
+}
+
+message ProductItemReq {
+    uint32 ProductID = 1;
+    uint32 ProductItemId = 2;
+    uint32 QtyInStock = 3;
+    uint32 Price = 4;
+    uint32 DiscountPrice = 5;
+    string SKU = 6;
+    map<string, VariationOption> Configurations = 7;
+    repeated string Images = 8;
+}
+
+message GetProductResponse {
+    repeated ResponseProduct products = 1;
+}
+
+message ResponseProduct {
+    uint32 ID = 1;
+    string Name = 2;
+    string Description = 3;
+    string Category_name = 4;
+    uint32 Price = 5;
+    uint32 DiscountPrice = 6;
+    string Image = 7;
+    google.protobuf.Timestamp CreatedAt = 8;
+    google.protobuf.Timestamp UpdatedAt = 9;
+}
+
+message ProductItemResp {
+    uint32 ProductID = 1;
+    uint32 ProductItemID = 2;
+    uint32 StockAvailable = 3;
+    string ProductName = 4;
+    string Brand = 5;
+    string Description = 6;
+    string Color = 7;
+    uint32 Storage = 8;
+    uint32 Price = 9;
+    uint32 OfferPrice = 10;
+    repeated string Images = 11;
+}
+
+message GetAllBrandsResponse {
+    repeated Brand Brands = 1;
+}
+
+message Brand {
+    uint32 ID = 1;
+    string CategoryName = 2;
+}
+
+
