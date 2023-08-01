@@ -13,7 +13,7 @@ type Server struct {
 }
 
 // NewServerHTTP creates a new server with given handler functions
-func NewServerHTTP(cfg *config.Config, authHandler handler, userHandler handler.UserHandler) *Server {
+func NewServerHTTP(cfg *config.Config, authHandler, userHandler handler.UserHandler) *Server {
 	engine := gin.New()
 	engine.Use(gin.Logger())
 
