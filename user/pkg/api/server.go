@@ -30,6 +30,6 @@ func NewGRPCServer(cfg *config.Config, server pb.UserServiceServer) (*ServeServe
 }
 
 func (c *ServeServer) Run(cfg *config.Config) error {
-	log.Printf("Auth services listening on port : %v ...", cfg.USER_SVC_PORT)
+	log.Printf("User services listening on port : %v ...", cfg.USER_SVC_PORT)
 	return c.gs.Serve(c.listen)
 }

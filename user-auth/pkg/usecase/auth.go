@@ -28,6 +28,8 @@ func NewAuthUseCase(repo interfaces.AuthRepository, userClient client.UserClient
 
 func (u *AuthUseCase) SignUp(ctx context.Context, user models.User) error {
 
+	fmt.Println("================user auth server")
+
 	// Check if user already exist
 	var data models.UserDataRequest
 	copier.Copy(&data, user)
