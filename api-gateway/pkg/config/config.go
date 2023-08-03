@@ -8,6 +8,7 @@ import (
 )
 
 type Config struct {
+	JWT             string `mapstructure:"SECRET_KEY"`
 	AUTH_SVC_URL    string `mapstructure:"AUTH_SVC_URL"`
 	PRODUCT_SVC_URL string `mapstructure:"PRODUCT_SVC_URL"`
 	USER_SVC_URL    string `mapstructure:"USER_SVC_URL"`

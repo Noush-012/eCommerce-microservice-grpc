@@ -22,7 +22,7 @@ func JwtCookieSetup(c *gin.Context, name string, userId uint) bool {
 	})
 
 	// Generate signed JWT token using env var of secret key
-	if tokenString, err := token.SignedString([]byte(config.GetJWTConfig())); err == nil {
+	if tokenString, err := token.SignedString([]byte(config.GetConfig().JWT)); err == nil {
 
 		// Set cookie with signed string if no error time = 10 hours
 		c.SetCookie(name, tokenString, 10*3600, "", "", false, true)
@@ -44,7 +44,7 @@ func ValidateToken(tokenString string) (jwt.StandardClaims, error) {
 				return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 			}
 
-			return []byte(config.GetJWTConfig()), nil
+			return []byte(config.GetConfig().JWT), nil
 		},
 	)
 	if err != nil || !token.Valid {

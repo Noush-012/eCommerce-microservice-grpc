@@ -14,13 +14,13 @@ func InitializeApi(cfg *config.Config) (*api.Server, error) {
 
 	wire.Build(
 		client.NewAuthClient,
-		client.NewUserClient,
+		// client.NewUserClient,
 		// client.NewProductClient,
 		// client.NewCartClient,
 		// client.NewOrderClient,
 
 		handler.NewAuthHandler,
-		handler.NewUserHandler,
+		// handler.NewUserHandler,
 		// handler.NewProductHandler,
 		// handler.NewCartHandler,
 		// handler.NewOrderHandler,

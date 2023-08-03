@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/Noush-012/project-ecommerce-microservice/api-gateway/pkg/api/handler/interfaces"
 	client "github.com/Noush-012/project-ecommerce-microservice/api-gateway/pkg/client/interfaces"
 	"github.com/Noush-012/project-ecommerce-microservice/api-gateway/pkg/models"
-	"github.com/Noush-012/project-ecommerce-microservice/api-gateway/pkg/usecase/interfaces"
 	"github.com/Noush-012/project-ecommerce-microservice/api-gateway/pkg/utils/request"
 	"github.com/Noush-012/project-ecommerce-microservice/api-gateway/pkg/utils/response"
 	"github.com/gin-gonic/gin"

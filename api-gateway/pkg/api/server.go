@@ -1,7 +1,7 @@
 package api
 
 import (
-	"github.com/Noush-012/project-ecommerce-microservice/api-gateway/pkg/api/handler"
+	handler "github.com/Noush-012/project-ecommerce-microservice/api-gateway/pkg/api/handler/interfaces"
 	"github.com/Noush-012/project-ecommerce-microservice/api-gateway/pkg/api/routes"
 	"github.com/Noush-012/project-ecommerce-microservice/api-gateway/pkg/config"
 	"github.com/gin-gonic/gin"
@@ -13,12 +13,12 @@ type Server struct {
 }
 
 // NewServerHTTP creates a new server with given handler functions
-func NewServerHTTP(cfg *config.Config, authHandler, userHandler handler.UserHandler) *Server {
+func NewServerHTTP(cfg *config.Config, authHandler handler.AuthHandler) *Server {
 	engine := gin.New()
 	engine.Use(gin.Logger())
 
-	routes.UserRoutes(engine.Group("/"), authHandler, userHandler)
-	// routes.AdminRoutes(engine.Group("/admin"))
+	routes.UserRoutes(engine.Group("/"), authHandler)
+	// routes.SetupAdminRoutes(engine.Group("/admin"), productHandler)
 
 	return &Server{
 		engine: engine,
