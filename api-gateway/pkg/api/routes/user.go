@@ -13,14 +13,14 @@ func UserRoutes(api *gin.RouterGroup, authHandler interfaces.AuthHandler) {
 		signup.POST("/", authHandler.UserSignup)
 	}
 	// Login
-	// login := api.Group("/login")
-	// {
-	// 	login.GET("/", authHandler.LoginPage)
-	// 	// Login with otp
-	// 	login.POST("/", authHandler.LoginSubmit)
-	// 	// OTP verfication
-	// 	login.POST("/otp-verify", authHandler.UserOTPVerify)
-	// }
+	login := api.Group("/login")
+	{
+		login.GET("/", authHandler.LoginPage)
+		// Login with otp
+		login.POST("/", authHandler.LoginSubmit)
+		// OTP verfication
+		login.POST("/otp-verify", authHandler.UserOTPVerify)
+	}
 
 	// api.GET("/heath-check", func(ctx *gin.Context) {
 	// 	ctx.JSON(200, gin.H{

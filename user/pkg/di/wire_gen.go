@@ -29,7 +29,7 @@ func InitiateAPI(cfg *config.Config) (*api.ServeServer, error) {
 		return nil, err
 	}
 	userService := usecase.NewUserUseCase(userRepository, orderClient)
-	userServiceServer := service.NewUserServiceServer(userService)
+	userServiceServer := service.NewUserServiceServer(userService, userRepository)
 	serveServer, err := api.NewGRPCServer(cfg, userServiceServer)
 	if err != nil {
 		return nil, err

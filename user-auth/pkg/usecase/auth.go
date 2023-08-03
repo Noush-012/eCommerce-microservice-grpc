@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 
+	"github.com/Noush-012/project-ecommerce-microservice/api-gateway/pkg/utils/request"
 	client "github.com/Noush-012/project-ecommerce-microservice/user-auth-service/pkg/client/interface"
 	"github.com/Noush-012/project-ecommerce-microservice/user-auth-service/pkg/models"
 	interfaces "github.com/Noush-012/project-ecommerce-microservice/user-auth-service/pkg/repository/interface"
@@ -27,8 +28,6 @@ func NewAuthUseCase(repo interfaces.AuthRepository, userClient client.UserClient
 }
 
 func (u *AuthUseCase) SignUp(ctx context.Context, user models.User) error {
-
-	fmt.Println("================user auth server")
 
 	// Check if user already exist
 	var data models.UserDataRequest
@@ -80,8 +79,7 @@ func (u *AuthUseCase) Login(ctx context.Context, user models.Users) (models.User
 	if _, err := verify.TwilioSendOTP("+91" + DBUser.Phone); err != nil {
 		// response := response.ErrorResponse(500, "failed to send otp", err.Error(), nil)
 		// c.JSON(http.StatusInternalServerError, response)
-		return user, fmt.Errorf("failed to send otp %v",
-			err)
+		return user, fmt.Errorf("failed to send otp %v", err)
 	}
 	// check password with hashed pass
 	if bcrypt.CompareHashAndPassword([]byte(DBUser.Password), []byte(user.Password)) != nil {
@@ -93,17 +91,27 @@ func (u *AuthUseCase) Login(ctx context.Context, user models.Users) (models.User
 	return dbUser, nil
 
 }
-func (u *AuthUseCase) OTPLogin(ctx context.Context, user models.Users) (models.Users, error) {
+func (u *AuthUseCase) OTPLogin(ctx *context.Context, body request.OTPVerify) (models.Users, error) {
 	// Find user in db
 	var data models.UserDataRequest
-	copier.Copy(&data, user)
+	copier.Copy(&data, body)
 	DBUser, err := u.userClient.FindUser(data)
+
+	fmt.Println("== == == == ", DBUser)
 	if err != nil {
-		return user, err
+		return models.Users{}, err
 	} else if DBUser.ID == 0 {
-		return user, errors.New("user not exist")
+		return models.Users{}, errors.New("user not exist")
 	}
+
 	var dbUser models.Users
 	copier.Copy(&dbUser, DBUser)
+
+	// Verify otp
+	err = verify.TwilioVerifyOTP("+91"+DBUser.Phone, body.OTP)
+	if err != nil {
+
+		return models.Users{}, errors.New(err.Error())
+	}
 	return dbUser, nil
 }

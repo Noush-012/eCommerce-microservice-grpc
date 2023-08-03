@@ -144,11 +144,28 @@ syntax = "proto3";
 package pb;
 option go_package = "./pkg/pb";
 
-import "google/protobuf/empty.proto";
+
+import "google/protobuf/timestamp.proto";
 
 service UserService {
-    rpc Profile() returns ();
+    rpc Profile(userDataRequest) returns (userDataResponse);
+    rpc FindUser (User) returns (User);
 }
+
+message User {
+    uint32 ID = 1;
+    string UserName = 2;
+    string FirstName = 3;
+    string LastName = 4;
+    uint32 Age = 5;
+    string Email = 6;
+    string Phone = 7;
+    string Password = 8; 
+    bool BlockStatus = 9;
+    google.protobuf.Timestamp CreatedAt = 10;
+    google.protobuf.Timestamp UpdatedAt = 11;
+  }
+  
 
 message userDataRequest {
     int32 id = 1;

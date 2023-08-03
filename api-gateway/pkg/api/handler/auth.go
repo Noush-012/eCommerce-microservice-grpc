@@ -1,9 +1,11 @@
 package handler
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
 
+	"github.com/Noush-012/project-ecommerce-microservice/api-gateway/pkg/api/auth"
 	"github.com/Noush-012/project-ecommerce-microservice/api-gateway/pkg/api/handler/interfaces"
 	client "github.com/Noush-012/project-ecommerce-microservice/api-gateway/pkg/client/interfaces"
 	"github.com/Noush-012/project-ecommerce-microservice/api-gateway/pkg/models"
@@ -51,7 +53,7 @@ func (u *authHandler) UserSignup(c *gin.Context) {
 
 	// Check the user already exist in DB and save user if not
 	if err := u.client.SignUp(c, user); err != nil {
-		response := response.ErrorResponse(400, "User already exist", "", nil)
+		response := response.ErrorResponse(400, "User already exist", err.Error(), nil)
 		c.JSON(http.StatusBadRequest, response)
 		return
 	}
@@ -62,68 +64,61 @@ func (u *authHandler) UserSignup(c *gin.Context) {
 
 }
 
-// func (u *authHandler) LoginSubmit(c *gin.Context) {
-// 	var body request.LoginData
-// 	if err := c.ShouldBindJSON(&body); err != nil {
-// 		response := response.ErrorResponse(400, "Missing or invalid entry", err.Error(), body)
-// 		c.JSON(http.StatusBadRequest, response)
-// 		return
-// 	}
-// 	if body.Email == "" && body.Password == "" && body.UserName == "" {
-// 		_ = errors.New("please enter user_name and password")
-// 		response := "Field should not be empty"
-// 		c.JSON(http.StatusBadRequest, response)
-// 		return
-// 	}
-// 	// Copying
-// 	var user models.Users
-// 	copier.Copy(&user, body)
+func (u *authHandler) LoginSubmit(c *gin.Context) {
+	var body request.LoginData
+	if err := c.ShouldBindJSON(&body); err != nil {
+		response := response.ErrorResponse(400, "Missing or invalid entry", err.Error(), body)
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+	if body.Email == "" && body.Password == "" && body.UserName == "" {
+		_ = errors.New("please enter user_name and password")
+		response := "Field should not be empty"
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+	// Copying
+	var user models.Users
+	copier.Copy(&user, body)
 
-// 	dbUser, err := u.client.Login(c, user)
-// 	if err != nil {
-// 		response := response.ErrorResponse(500, "Something went wrong !", err.Error(), nil)
-// 		c.JSON(http.StatusBadRequest, response)
-// 		return
-// 	}
+	dbUser, err := u.client.Login(c, user)
+	if err != nil {
+		response := response.ErrorResponse(500, "Something went wrong !", err.Error(), nil)
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
 
-// 	response := gin.H{"Successfuly send OTP to registered mobile number": dbUser.ID}
-// 	c.JSON(http.StatusOK, response)
-// }
+	response := gin.H{"Successfuly send OTP to registered mobile number": dbUser.ID}
+	c.JSON(http.StatusOK, response)
+}
 
-// func (u *authHandler) UserOTPVerify(c *gin.Context) {
+func (u *authHandler) UserOTPVerify(c *gin.Context) {
 
-// 	var body request.OTPVerify
-// 	if err := c.ShouldBindJSON(&body); err != nil {
-// 		response := response.ErrorResponse(400, "Missing or invalid entry", err.Error(), body)
-// 		c.JSON(http.StatusBadRequest, response)
-// 		return
-// 	}
-// 	var user = models.Users{
-// 		ID: body.UserID,
-// 	}
+	var body request.OTPVerify
+	if err := c.ShouldBindJSON(&body); err != nil {
+		response := response.ErrorResponse(400, "Missing or invalid entry", err.Error(), body)
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+	var user = models.Users{
+		ID: body.UserID,
+	}
 
-// 	usr, err := u.client.OTPLogin(c, user)
-// 	if err != nil {
-// 		response := response.ErrorResponse(500, "user not registered", err.Error(), user)
-// 		c.JSON(http.StatusBadRequest, response)
-// 		return
-// 	}
+	usr, err := u.client.OTPLogin(c, body)
+	if err != nil {
+		response := response.ErrorResponse(500, "user not registered", err.Error(), user)
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+	// setup JWT
+	ok := auth.JwtCookieSetup(c, "user-auth", usr.ID)
+	if !ok {
+		response := response.ErrorResponse(500, "failed to login", "", nil)
+		c.JSON(http.StatusInternalServerError, response)
+		return
 
-// 	// Verify otp
-// 	err = verify.TwilioVerifyOTP("+91"+usr.Phone, body.OTP)
-// 	if err != nil {
-// 		response := gin.H{"error": err.Error()}
-// 		c.JSON(http.StatusBadRequest, response)
-// 		return
-// 	}
-// 	// setup JWT
-// 	ok := auth.JwtCookieSetup(c, "user-auth", usr.ID)
-// 	if !ok {
-// 		response := response.ErrorResponse(500, "failed to login", "", nil)
-// 		c.JSON(http.StatusInternalServerError, response)
-// 		return
+	}
 
-// 	}
-// 	response := response.SuccessResponse(200, "Successfuly logged in!", nil)
-// 	c.JSON(http.StatusOK, response)
-// }
+	response := response.SuccessResponse(200, "Successfuly logged in!", nil)
+	c.JSON(http.StatusOK, response)
+}

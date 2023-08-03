@@ -20,6 +20,7 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type UserServiceClient interface {
 	Profile(ctx context.Context, in *UserId, opts ...grpc.CallOption) (*ProfileResponse, error)
+	FindUser(ctx context.Context, in *User, opts ...grpc.CallOption) (*User, error)
 	AddAddress(ctx context.Context, in *Address, opts ...grpc.CallOption) (*AddAddressResponse, error)
 	UpdateAddress(ctx context.Context, in *AddressPatchRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	DeleteAddress(ctx context.Context, in *DeleteAddressRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -45,6 +46,15 @@ func NewUserServiceClient(cc grpc.ClientConnInterface) UserServiceClient {
 func (c *userServiceClient) Profile(ctx context.Context, in *UserId, opts ...grpc.CallOption) (*ProfileResponse, error) {
 	out := new(ProfileResponse)
 	err := c.cc.Invoke(ctx, "/pb.UserService/Profile", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) FindUser(ctx context.Context, in *User, opts ...grpc.CallOption) (*User, error) {
+	out := new(User)
+	err := c.cc.Invoke(ctx, "/pb.UserService/FindUser", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -164,6 +174,7 @@ func (c *userServiceClient) GetWalletHistory(ctx context.Context, in *UserId, op
 // for forward compatibility
 type UserServiceServer interface {
 	Profile(context.Context, *UserId) (*ProfileResponse, error)
+	FindUser(context.Context, *User) (*User, error)
 	AddAddress(context.Context, *Address) (*AddAddressResponse, error)
 	UpdateAddress(context.Context, *AddressPatchRequest) (*emptypb.Empty, error)
 	DeleteAddress(context.Context, *DeleteAddressRequest) (*emptypb.Empty, error)
@@ -185,6 +196,9 @@ type UnimplementedUserServiceServer struct {
 
 func (UnimplementedUserServiceServer) Profile(context.Context, *UserId) (*ProfileResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Profile not implemented")
+}
+func (UnimplementedUserServiceServer) FindUser(context.Context, *User) (*User, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method FindUser not implemented")
 }
 func (UnimplementedUserServiceServer) AddAddress(context.Context, *Address) (*AddAddressResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddAddress not implemented")
@@ -249,6 +263,24 @@ func _UserService_Profile_Handler(srv interface{}, ctx context.Context, dec func
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(UserServiceServer).Profile(ctx, req.(*UserId))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_FindUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(User)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).FindUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.UserService/FindUser",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).FindUser(ctx, req.(*User))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -479,6 +511,10 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Profile",
 			Handler:    _UserService_Profile_Handler,
+		},
+		{
+			MethodName: "FindUser",
+			Handler:    _UserService_FindUser_Handler,
 		},
 		{
 			MethodName: "AddAddress",

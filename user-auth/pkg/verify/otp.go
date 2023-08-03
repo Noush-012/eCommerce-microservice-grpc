@@ -37,6 +37,7 @@ func TwilioSendOTP(phoneNumber string) (string, error) {
 	params.SetChannel("sms")
 
 	resp, err := client.VerifyV2.CreateVerification(SERVICESID, params)
+
 	if err != nil {
 		return "", err
 	}
