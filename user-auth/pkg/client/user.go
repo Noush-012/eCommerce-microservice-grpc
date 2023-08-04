@@ -29,7 +29,7 @@ func NewUserServiceClient(cfg *config.Config) (interfaces.UserClient, error) {
 func (u *UserClient) FindUser(user models.UserDataRequest) (models.User, error) {
 
 	res, err := u.client.FindUser(context.Background(), &pb.User{
-		ID:       user.ID,
+		ID:       user.UserID,
 		UserName: user.UserName,
 		Email:    user.Email,
 		Phone:    user.Phone,

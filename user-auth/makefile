@@ -10,3 +10,4 @@ server:
 	go run cmd/main.go
 
 docker-build:
+	docker build -t Noush-012/project-ecommerce-microservice-user-auth-svc .

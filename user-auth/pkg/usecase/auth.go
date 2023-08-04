@@ -94,7 +94,7 @@ func (u *AuthUseCase) Login(ctx context.Context, user models.Users) (models.User
 func (u *AuthUseCase) OTPLogin(ctx *context.Context, body request.OTPVerify) (models.Users, error) {
 	// Find user in db
 	var data models.UserDataRequest
-	copier.Copy(&data, body)
+	data.UserID = uint32(body.UserID)
 	DBUser, err := u.userClient.FindUser(data)
 
 	fmt.Println("== == == == ", DBUser)

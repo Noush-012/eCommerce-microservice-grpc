@@ -22,6 +22,8 @@ func TwilioSendOTP(phoneNumber string) (string, error) {
 	ACCOUNTSID = config.GetConfig().ACCOUNTSID
 	AUTHTOKEN = config.GetConfig().AUTHTOKEN
 
+	fmt.Println("---------/-", SERVICESID, ACCOUNTSID, AUTHTOKEN, "222", config.GetConfig().SERVICESID)
+
 	client = twilio.NewRestClientWithParams(twilio.ClientParams{
 		Password: AUTHTOKEN,
 		Username: ACCOUNTSID,

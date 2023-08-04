@@ -17,12 +17,10 @@ type Config struct {
 	SERVICESID    string `mapstructure:"TWILIO_SERVICES_ID"`
 }
 
-// var envVariables = []string{
-// 	"DATABASE", "SECRET_KEY", "TWILIO_AUTH_TOKEN", "TWILIO_ACCOUNT_SID",
-// 	"TWILIO_SERVICES_ID", "AUTH_SVC_URL",
-// }
-
-var config Config
+var envVariables = []string{
+	"DATABASE", "SECRET_KEY", "TWILIO_AUTH_TOKEN", "TWILIO_ACCOUNT_SID",
+	"TWILIO_SERVICES_ID", "AUTH_SVC_PORT", "USER_SVC_URL",
+}
 
 func LoadConfig() (config *Config, err error) {
 
@@ -33,11 +31,11 @@ func LoadConfig() (config *Config, err error) {
 		panic(fmt.Errorf("fatal error config file: %s", err))
 	}
 
-	// for _, env := range envVariables {
-	// 	if err := viper.BindEnv(env); err != nil {
-	// 		return config, err
-	// 	}
-	// }
+	for _, env := range envVariables {
+		if err := viper.BindEnv(env); err != nil {
+			return config, err
+		}
+	}
 	if err := viper.Unmarshal(&config); err != nil {
 		return config, err
 	}
@@ -48,6 +46,13 @@ func LoadConfig() (config *Config, err error) {
 
 	return config, nil
 }
-func GetConfig() Config {
-	return config
+
+func GetConfig() *Config {
+
+	cfg, err := LoadConfig()
+	if err != nil {
+		panic("config failure")
+	}
+
+	return cfg
 }

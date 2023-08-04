@@ -17,7 +17,6 @@ func main() {
 	if err != nil {
 		log.Printf("\nfailed to initiate service error : %s", err.Error())
 	}
-
 	err = service.Run(cfg)
 	if err != nil {
 		log.Printf("\n failed to run the server")

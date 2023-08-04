@@ -99,7 +99,7 @@ type User struct {
 }
 
 type UserDataRequest struct {
-	ID       uint32
+	UserID   uint32
 	UserName string
 	Email    string
 	Phone    string

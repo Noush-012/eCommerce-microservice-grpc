@@ -67,7 +67,8 @@ func (a *authClient) Login(ctx context.Context, user models.Users) (models.Users
 func (a *authClient) OTPLogin(ctx context.Context, body request.OTPVerify) (models.Users, error) {
 
 	resp, err := a.client.OTPLogin(ctx, &pb.OTPLoginDataRequest{
-		Otp: body.OTP,
+		Otp:    body.OTP,
+		UserID: int32(body.UserID),
 	})
 	if err != nil {
 		return models.Users{}, err
