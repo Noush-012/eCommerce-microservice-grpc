@@ -3,8 +3,8 @@ package interfaces
 import (
 	"context"
 
-	"github.com/Noush-012/project-ecommerce-microservice/api-gateway/pkg/utils/request"
 	"github.com/Noush-012/project-ecommerce-microservice/user-auth-service/pkg/models"
+	"github.com/Noush-012/project-ecommerce-microservice/user-auth-service/pkg/utils/request"
 )
 
 type AuthService interface {

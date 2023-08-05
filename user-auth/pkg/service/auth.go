@@ -3,10 +3,10 @@ package service
 import (
 	"context"
 
-	"github.com/Noush-012/project-ecommerce-microservice/api-gateway/pkg/utils/request"
 	"github.com/Noush-012/project-ecommerce-microservice/user-auth-service/pkg/models"
 	"github.com/Noush-012/project-ecommerce-microservice/user-auth-service/pkg/pb"
 	interfaces "github.com/Noush-012/project-ecommerce-microservice/user-auth-service/pkg/usecase/interface"
+	"github.com/Noush-012/project-ecommerce-microservice/user-auth-service/pkg/utils/request"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"

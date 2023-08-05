@@ -10,4 +10,4 @@ server:
 	go run cmd/main.go
 
 docker-build:
-	docker build -t Noush-012/project-ecommerce-microservice-api-gateway .
+	docker build -t noush-012/project-ecommerce-microservice-api-gateway .

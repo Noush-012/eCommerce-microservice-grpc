@@ -3,7 +3,7 @@ package response
 import (
 	"time"
 
-	"github.com/Noush-012/project-ecommerce-microservice/api-gateway/pkg/models"
+	"github.com/Noush-012/project-ecommerce-microservice/user-service/pkg/models"
 )
 
 type Profile struct {

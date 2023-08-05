@@ -16,6 +16,7 @@ func ConnToDB(cfg *config.Config) (*gorm.DB, error) {
 
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
+		db.SkipDefaultTransaction = true
 		log.Println("failed to connect database !")
 		return nil, errors.New("failed to connect database ")
 	}

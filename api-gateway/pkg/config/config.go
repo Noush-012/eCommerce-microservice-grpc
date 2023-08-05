@@ -21,7 +21,8 @@ var config Config
 
 func LoadConfig() (Config, error) {
 
-	viper.SetConfigType("env")  // set the file type
+	// viper.SetConfigType("env") // set the file type
+	viper.AddConfigPath("./")
 	viper.SetConfigFile(".env") // set the file name and path
 	err := viper.ReadInConfig() // read the config file
 	if err != nil {             // handle errors while reading the config file
@@ -41,9 +42,3 @@ func LoadConfig() (Config, error) {
 func GetConfig() Config {
 	return config
 }
-
-// to get the secret code for JWT
-// func GetJWTConfig() string {
-
-// 	return config.JWT
-// }

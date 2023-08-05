@@ -5,11 +5,11 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/Noush-012/project-ecommerce-microservice/api-gateway/pkg/utils/request"
 	client "github.com/Noush-012/project-ecommerce-microservice/user-auth-service/pkg/client/interface"
 	"github.com/Noush-012/project-ecommerce-microservice/user-auth-service/pkg/models"
 	interfaces "github.com/Noush-012/project-ecommerce-microservice/user-auth-service/pkg/repository/interface"
 	service "github.com/Noush-012/project-ecommerce-microservice/user-auth-service/pkg/usecase/interface"
+	"github.com/Noush-012/project-ecommerce-microservice/user-auth-service/pkg/utils/request"
 	"github.com/Noush-012/project-ecommerce-microservice/user-auth-service/pkg/verify"
 	"github.com/jinzhu/copier"
 
